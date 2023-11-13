@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Album;
-use App\Models\Photo;
 use Illuminate\Http\Request;
 
 class AlbumController extends Controller
@@ -14,7 +13,7 @@ class AlbumController extends Controller
     }
 
     public function showAlbum($id){
-        $album = Photo::findOrFail($id);
+        $album = Album::findOrFail($id);
         return view('pages/album', ["album" => $album]);
     }
 }
