@@ -6,5 +6,6 @@
         @foreach ($albums as $a)
             <li><a href="{{route('album', $a->id)}}">{{$a->titre}}</a></li>            
         @endforeach
+        <li>ok</li>
     </ul>
 @endsection
