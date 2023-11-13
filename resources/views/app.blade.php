@@ -8,8 +8,9 @@
 </head>
 <body>
     <nav>
-        <a href="/">Home</a>
-        <a href="/album">Les albums</a>
+        <a href="{{route("home")}}">Home</a>
+        <a href="{{route("albums")}}">Les albums</a>
+        <a href="{{route("tags")}}">Catégories</a>
     </nav>
     <main>
     @yield('content')

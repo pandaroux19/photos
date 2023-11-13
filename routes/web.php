@@ -17,8 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::get('/album', [AlbumController::class, 'showAlbums'])->name('albums');
 
 Route::get('/album/{id}', [AlbumController::class, 'showAlbum'])->name('album');
+
+Route::get('/tag', [AlbumController::class, 'showTags'])->name('tags');
+
+Route::get('/tag/{id}', [AlbumController::class, 'showTag'])->name('tag');
