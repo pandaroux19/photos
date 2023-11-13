@@ -7,6 +7,13 @@
     <title>Document</title>
 </head>
 <body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/album">Les albums</a>
+    </nav>
+    <main>
     @yield('content')
+    </main>
+    <footer></footer>
 </body>
 </html>
