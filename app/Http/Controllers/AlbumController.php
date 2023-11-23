@@ -44,32 +44,31 @@ class AlbumController extends Controller
         $album->creation = date('Y-m-d');
         $album->save();
 
-        for($i=0;$i<count($request->input("titre-photo"));$i++) {
-            $tags = explode(' ', $request->input('tags')[$i]);
-            $photo = new Photo();
-            $photo->titre = $request->input("titre-photo")[$i];
-            $photo->url = $request->input("url")[$i];
-            $photo->note = $request->input("note")[$i];
-            $photo->album_id = $album->id;
-            $photo->save();
-            foreach($tags as $t){
-                $select = Tag::whereRaw('LOWER(nom) = ?', strtolower($t))->first();
-                if($select){
-                    $photo->tags()->attach($select->id);
-                }
-                else{
-                    $tag = new Tag();
-                    $tag->nom = $t;
-                    $tag->save();
-                    $photo->tags()->attach($tag->id);
+        if($request->input("titre-photo")){
+            for($i=0;$i<count($request->input("titre-photo"));$i++) {
+                $tags = explode(' ', $request->input('tags')[$i]);
+                $photo = new Photo();
+                $photo->titre = $request->input("titre-photo")[$i];
+                $photo->url = $request->input("url")[$i];
+                $photo->note = $request->input("note")[$i];
+                $photo->album_id = $album->id;
+                $photo->save();
+                foreach($tags as $t){
+                    $select = Tag::whereRaw('LOWER(nom) = ?', strtolower($t))->first();
+                    if($select){
+                        $photo->tags()->attach($select->id);
+                    }
+                    else{
+                        $tag = new Tag();
+                        $tag->nom = $t;
+                        $tag->save();
+                        $photo->tags()->attach($tag->id);
+                    }
                 }
             }
         }
 
         return redirect(route("albumShow", $album->id));
-
-
-        return redirect()->route("home");
     }
 
     /**
@@ -85,7 +84,7 @@ class AlbumController extends Controller
      */
     public function edit(Album $album)
     {
-        return view('pages.album.edit', ["album" => $album]);
+        // 
     }
 
     /**
@@ -93,36 +92,7 @@ class AlbumController extends Controller
      */
     public function update(Request $request, Album $album)
     {
-        $request->validate([
-            "titre-photo.*" => "required",
-            "url.*" => "required | url",
-            "note.*" => "required | integer | max:10",
-            "tags.*" => "required",
-        ]);
-        
-        for($i=0;$i<count($request->input("titre-photo"));$i++) {
-            $tags = explode(' ', $request->input('tags')[$i]);
-            $photo = new Photo();
-            $photo->titre = $request->input("titre-photo")[$i];
-            $photo->url = $request->input("url")[$i];
-            $photo->note = $request->input("note")[$i];
-            $photo->album_id = $album->id;
-            $photo->save();
-            foreach($tags as $t){
-                $select = Tag::whereRaw('LOWER(nom) = ?', strtolower($t))->first();
-                if($select){
-                    $photo->tags()->attach($select->id);
-                }
-                else{
-                    $tag = new Tag();
-                    $tag->nom = $t;
-                    $tag->save();
-                    $photo->tags()->attach($tag->id);
-                }
-            }
-        }
-
-        return redirect(route("albumShow", $album->id));
+        // 
     }
 
     /**
@@ -130,6 +100,17 @@ class AlbumController extends Controller
      */
     public function destroy(Album $album)
     {
-        //
+        foreach($album->photos as $photo){
+            foreach($photo->tags as $tag){
+                $select = $tag->pivot->where('tag_id', strtolower($tag->pivot->tag_id))->count();
+                if($select==1){
+                    $photo->tags()->delete();
+                }
+            }
+            $photo->tags()->detach();
+            $photo->delete();
+        }
+        $album->delete();
+        return redirect(route("albumIndex"));
     }
 }

@@ -27,4 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     removePhoto()
+
+    document.querySelector("#photoShow").addEventListener("click", (e) => {
+        let photo = document.querySelector("#photoBig")
+        document.querySelector("#photoBig>img").src=document.querySelector("#photoShow")
+        photo.style.display = "block"
+    })
 })

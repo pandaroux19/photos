@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,7 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::resource('/album', AlbumController::class, ['names'=>["index"=>"albumIndex", "show"=>"albumShow", "create"=>"albumCreate", "store"=>"albumStore", "edit"=>"albumEdit", "update"=>"albumUpdate"]])->only(["index", "show", "create", "store", "edit", "update"]);
+Route::resource('/album', AlbumController::class, ['names'=>["index"=>"albumIndex", "show"=>"albumShow", "create"=>"albumCreate", "store"=>"albumStore", "destroy"=>"albumDestroy"]])->only(["index", "show", "create", "store", "destroy"]);
+
+Route::resource('/photo', PhotoController::class, ['names'=>["store"=>"photoStore", "destroy"=>"photoDestroy"]])->only(["store", "destroy"]);
 
 Route::resource('/tag', TagController::class, ['names'=>["index"=>"tagIndex", "show"=>"tagShow"]])->only(["index", "show"]);
 
