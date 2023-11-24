@@ -11,8 +11,10 @@
         @foreach ($album->photos as $p)
             <li>
                 <div id="photoBig">
-                    <img src="" alt="photo">
-                    <button>Fermer</button>
+                    <div>
+                        <img src="" alt="photo">
+                        <button>Fermer</button>
+                    </div>
                 </div>
                 <h2>{{$p->titre}}</h2>
                 <img id="photoShow" src="{{$p->url}}" alt="{{$p->titre}}">

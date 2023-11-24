@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const box = `<input type="text" name="titre-photo[]" required placeholder="Titre"><input type="text" name="url[]" required placeholder="Lien de l'image"><input type="number" name="note[]" required placeholder="Note"><input type="text" name="tags[]" required placeholder="Les tags"><button id="remove-photo">Supprimer la photo</button>`
 
+    const closeButton = document.querySelector("#photoBig>div>button")
+
     if (addPhoto) {
         addPhoto.addEventListener("click", (e) => {
             e.preventDefault();
@@ -28,9 +30,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     removePhoto()
 
-    document.querySelector("#photoShow").addEventListener("click", (e) => {
+    document.querySelectorAll("#photoShow").forEach(element => element.addEventListener("click", (e) => {
         let photo = document.querySelector("#photoBig")
-        document.querySelector("#photoBig>img").src=document.querySelector("#photoShow")
+        document.querySelector("#photoBig>div>img").src=element.src
         photo.style.display = "block"
+        document.querySelector("body").style.overflow = "hidden"
+    }))
+
+    if(closeButton){
+        closeButton.addEventListener("click", (e) => {
+            closeImg()
+        })
+    }
+
+    document.addEventListener("keyup", (e) => {
+        if(e.code = "Escape"){
+            closeImg()
+        }
     })
 })
+
+function closeImg(){
+    let photo = document.querySelector("#photoBig")
+    photo.style.display = "none"
+    document.querySelector("body").style.overflow = null
+}
