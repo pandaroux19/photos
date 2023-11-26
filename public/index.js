@@ -41,13 +41,13 @@ document.addEventListener("DOMContentLoaded", () => {
         closeButton.addEventListener("click", (e) => {
             closeImg()
         })
+    
+        document.addEventListener("keyup", (e) => {
+            if(e.code = "Escape"){
+                closeImg()
+            }
+        })
     }
-
-    document.addEventListener("keyup", (e) => {
-        if(e.code = "Escape"){
-            closeImg()
-        }
-    })
 })
 
 function closeImg(){

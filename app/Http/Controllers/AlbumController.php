@@ -42,6 +42,7 @@ class AlbumController extends Controller
         $album = new Album();
         $album->titre = $request->input('titre');
         $album->creation = date('Y-m-d');
+        $album->user_id = auth()->user()->id;
         $album->save();
 
         if($request->input("titre-photo")){
