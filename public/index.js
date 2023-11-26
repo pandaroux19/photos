@@ -2,7 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const addPhoto = document.getElementById("add-photo")
     const form = document.querySelector("#add>.input-fields")
 
-    const box = `<input type="text" name="titre-photo[]" required placeholder="Titre"><input type="text" name="url[]" required placeholder="Lien de l'image"><input type="number" name="note[]" required placeholder="Note"><input type="text" name="tags[]" required placeholder="Les tags"><button id="remove-photo">Supprimer la photo</button>`
+    const box = `<input type="text" name="titre-photo[]" required placeholder="Titre"><input type="file" name="image[]" required><input type="number" name="note[]" required placeholder="Note"><input type="text" name="tags[]" required placeholder="Les tags"><button id="remove-photo">Supprimer la photo</button>`
+
+    // const box = `<input type="text" name="titre-photo[]" required placeholder="Titre"><input type="text" name="url[]" required placeholder="Lien de l'image"><input type="number" name="note[]" required placeholder="Note"><input type="text" name="tags[]" required placeholder="Les tags"><button id="remove-photo">Supprimer la photo</button>`
 
     const closeButton = document.querySelector("#photoBig>div>button")
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Photo;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
 {
@@ -31,16 +32,25 @@ class PhotoController extends Controller
     {
         $request->validate([
             "titre-photo.*" => "required",
-            "url.*" => "required | url",
+            // "url.*" => "required | url",
+            "image.*" => "required | file | mimes:jpg,png",
             "note.*" => "required | integer | max:10",
             "tags.*" => "required",
         ]);
 
         for($i=0;$i<count($request->input("titre-photo"));$i++) {
             $tags = explode(' ', $request->input('tags')[$i]);
+
+            if($request->file("image")[$i]->isValid()) {
+                $f = $request->file("image")[$i]->hashName();
+                $request->file("image")[$i]->storeAs("public/upload", $f);
+                $image = "/storage/upload/$f";
+            }
+
             $photo = new Photo();
             $photo->titre = $request->input("titre-photo")[$i];
-            $photo->url = $request->input("url")[$i];
+            // $photo->url = $request->input("url")[$i];
+            $photo->url = $image;
             $photo->note = $request->input("note")[$i];
             $photo->album_id = $request->input("album_id");
             $photo->save();
@@ -97,6 +107,11 @@ class PhotoController extends Controller
             }
         }
         $photo->tags()->detach();
+        $url = $photo->url;
+        $f = "public/".substr($url, strlen("/storage/"));
+        if(Storage::exists($f)){
+            Storage::delete($f);
+        }
         $photo->delete();
         return redirect(url()->previous());
     }

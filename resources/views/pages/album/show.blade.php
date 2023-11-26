@@ -37,13 +37,14 @@
         @endforeach
     </ul>
         @if (isset(Auth::user()->id) && Auth::user()->id == $album->user_id)
-        <form action="/photo" method="POST" id="add">
+        <form action="/photo" method="POST" id="add" enctype="multipart/form-data">
             @csrf
             <div class="input-fields">
                 <div>
                     <input type="hidden" name="album_id" value="{{$album->id}}">
                     <input type="text" name="titre-photo[]" required placeholder="Titre">
-                    <input type="text" name="url[]" required placeholder="Lien de l'image">
+                    <input type="file" name="image[]" required>
+                    {{-- <input type="text" name="url[]" required placeholder="Lien de l'image"> --}}
                     <input type="number" name="note[]" required placeholder="Note">
                     <input type="text" name="tags[]" required placeholder="Les tags">
                     <button id="remove-photo">Supprimer la photo</button>

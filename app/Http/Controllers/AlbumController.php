@@ -34,7 +34,8 @@ class AlbumController extends Controller
         $request->validate([
             "titre" => "required",
             "titre-photo.*" => "required",
-            "url.*" => "required | url",
+            "image.*" => "required | file | mimes:jpg,png",
+            // "url.*" => "required | url",
             "note.*" => "required | integer | max:10",
             "tags.*" => "required",
         ]);
@@ -48,9 +49,18 @@ class AlbumController extends Controller
         if($request->input("titre-photo")){
             for($i=0;$i<count($request->input("titre-photo"));$i++) {
                 $tags = explode(' ', $request->input('tags')[$i]);
+
+                if($request->file("image")[$i]->isValid()) {               // Je vérifie qu'il est valide
+                    $f = $request->file("image")[$i]->hashName();         // Je récupère un hash de son nom
+                    $request->file("image")[$i]->storeAs("public/upload", $f);   // Je le stocke au bon endroit
+                    $image = "/storage/upload/$f";                     // Si je veux pouvoir l'utiliser c'est avec ce chmin
+                    // Enregistrer dans base de données ?
+                }
+
                 $photo = new Photo();
                 $photo->titre = $request->input("titre-photo")[$i];
-                $photo->url = $request->input("url")[$i];
+                // $photo->url = $request->input("url")[$i];
+                $photo->url = $image;
                 $photo->note = $request->input("note")[$i];
                 $photo->album_id = $album->id;
                 $photo->save();

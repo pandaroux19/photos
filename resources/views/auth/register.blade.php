@@ -9,9 +9,12 @@
     <input type="password" name="password" required placeholder="password" /><br />
     <input type="password" name="password_confirmation" required placeholder="password" /><br />
     @if ($errors)
-    @foreach ($errors as $error)
-        <h3>{{$error}}</h3>
-    @endforeach
+    @error('email')
+        <p>{{$message}}</p>
+    @enderror
+    @error('password')
+        <p>{{$message}}</p>
+    @enderror
       @endif
     <input type="submit" /><br />
 </form>
