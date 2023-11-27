@@ -4,7 +4,7 @@
 
 <h1>Créer un nouvel album</h1>
 
-<form action="{{route('albumStore')}}" method="post" id="add">
+<form action="{{route('albumStore')}}" method="post" id="add" enctype="multipart/form-data">
     @csrf
     <div class="input-fields">
         <label for="titre">Le titre de votre album</label>

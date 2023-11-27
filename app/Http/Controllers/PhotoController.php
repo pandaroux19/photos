@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Photo;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
 {
@@ -28,7 +30,45 @@ class PhotoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "titre-photo.*" => "required",
+            // "url.*" => "required | url",
+            "image.*" => "required | file | mimes:jpg,png",
+            "note.*" => "required | integer | max:10",
+            "tags.*" => "required",
+        ]);
+
+        for($i=0;$i<count($request->input("titre-photo"));$i++) {
+            $tags = explode(' ', $request->input('tags')[$i]);
+
+            if($request->file("image")[$i]->isValid()) {
+                $f = $request->file("image")[$i]->hashName();
+                $request->file("image")[$i]->storeAs("public/upload", $f);
+                $image = "/storage/upload/$f";
+            }
+
+            $photo = new Photo();
+            $photo->titre = $request->input("titre-photo")[$i];
+            // $photo->url = $request->input("url")[$i];
+            $photo->url = $image;
+            $photo->note = $request->input("note")[$i];
+            $photo->album_id = $request->input("album_id");
+            $photo->save();
+            foreach($tags as $t){
+                $select = Tag::whereRaw('LOWER(nom) = ?', strtolower($t))->first();
+                if($select){
+                    $photo->tags()->attach($select->id);
+                }
+                else{
+                    $tag = new Tag();
+                    $tag->nom = $t;
+                    $tag->save();
+                    $photo->tags()->attach($tag->id);
+                }
+            }
+        }
+
+        return redirect(route("albumShow", $request->input("album_id")));
     }
 
     /**
@@ -60,6 +100,19 @@ class PhotoController extends Controller
      */
     public function destroy(Photo $photo)
     {
-        //
+        foreach($photo->tags as $tag){
+            $select = $tag->pivot->where('tag_id', strtolower($tag->pivot->tag_id))->count();
+            if($select==1){
+                $photo->tags()->delete();
+            }
+        }
+        $photo->tags()->detach();
+        $url = $photo->url;
+        $f = "public/".substr($url, strlen("/storage/"));
+        if(Storage::exists($f)){
+            Storage::delete($f);
+        }
+        $photo->delete();
+        return redirect(url()->previous());
     }
 }
