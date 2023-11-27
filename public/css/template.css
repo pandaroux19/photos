@@ -1,0 +1,10 @@
+.nav > ul {
+    display: flex;
+}
+
+
+.titre {
+    font-family: "acumin-pro", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
